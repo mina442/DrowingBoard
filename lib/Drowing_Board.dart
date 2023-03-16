@@ -252,3 +252,4 @@ class DrawingPoints {
 }
 
 enum SelectedMode { StrokeWidth, Opacity, Color }
+//متنساش تحاول تظبط ما بين البرنامجين
