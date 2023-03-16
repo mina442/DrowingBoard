@@ -4,13 +4,25 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-class DrowingBoard1 extends StatefulWidget {
+class DrowingBoard extends StatefulWidget {
+  const DrowingBoard({super.key});
+
   @override
-  _DrowingBoard1State createState() => _DrowingBoard1State();
+  State<DrowingBoard> createState() => _DrowingBoardState();
 }
 
-class _DrowingBoard1State extends State<DrowingBoard1> {
-  Color selectedColor=Colors.black;
+class _DrowingBoardState extends State<DrowingBoard> {
+  List <Color> colors = [
+    Colors.blue,
+  Colors.pink,
+  Colors.black ,
+   Colors.yellow ,
+  Colors.amberAccent,
+  Colors.purple,
+  Colors.green,
+  Colors.red,
+  ];
+Color selectedColor=Colors.black;
   Color pickerColor=Colors.black;
   double strokeWidth =3.0;
   double opacity =1.0;
@@ -18,14 +30,6 @@ class _DrowingBoard1State extends State<DrowingBoard1> {
   StrokeCap strokeCap =(Platform.isAndroid)?StrokeCap.butt:StrokeCap.round;
   SelectedMode selectedMode=SelectedMode.StrokeWidth;
   List <DrawingPoints>points=[];
-  
-  List <Color> colors=[
-    Colors.red,
-    Colors.green,
-    Colors.blue,
-    Colors.amber,
-    Colors.black
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +78,7 @@ class _DrowingBoard1State extends State<DrowingBoard1> {
                       onPressed: () {
                         setState(() {
                           showBottomList = false;
-                          points.clear();
+                          // points.clear();
                         });
                       }),
                 ],
@@ -146,7 +150,7 @@ class _DrowingBoard1State extends State<DrowingBoard1> {
       ),
     );
   }
-  getColorList (){
+    getColorList (){
     List <Widget>listWidget=[];
     for (Color color in colors)
     {
@@ -199,7 +203,8 @@ class _DrowingBoard1State extends State<DrowingBoard1> {
     listWidget.add(colorPicker);
     return listWidget;
   }
-  Widget colorCircle (Color color){
+  
+    Widget colorCircle (Color color){
     return GestureDetector(
       onTap: (){
         setState(() {
@@ -215,40 +220,35 @@ class _DrowingBoard1State extends State<DrowingBoard1> {
       ),
     );
   }
+
 }
 
-class DrawingPainter extends CustomPainter {
+class DrawingPainter extends CustomPainter{
   List<DrawingPoints>? pointsList = [];
-  List<Offset> offsetPoints = [];
-
+  List<Offset>? offsetPoints = [];
   DrawingPainter({this.pointsList});
-
   @override
   void paint(Canvas canvas, Size size) {
-    for (int i = 0; i < pointsList!.length - 1; i++) {
-      if (pointsList![i] != null && pointsList![i + 1] != null) {
-        canvas.drawLine(pointsList![i].points!, pointsList![i + 1].points!,
-            pointsList![i].paint!);
-      } else if (pointsList![i] != null && pointsList![i + 1] == null) {
-        offsetPoints.clear();
-        offsetPoints.add(pointsList![i].points!);
-        offsetPoints.add(Offset(
-            pointsList![i].points!.dx + 0.1,
-            pointsList![i].points!.dy + 0.1));
-        canvas.drawPoints(PointMode.points, offsetPoints, pointsList![i].paint!);
-      }
+    for(int i = 0; i < pointsList!.length-1; i++){
+    if(pointsList![i] != null && pointsList![i+1]!= null ){
+      canvas.drawLine(pointsList![i].points!, pointsList![i+1].points!,pointsList![i].paint!);
+      canvas.drawLine(pointsList![i].points!, pointsList![i+1].points!, pointsList![i].paint!);
+    }
+    else if(pointsList![i] != null && pointsList![i+1] == null ){
+      offsetPoints!.clear();
+      offsetPoints!.add(pointsList![i].points!);
+      offsetPoints!.add(Offset(pointsList![i].points!.dx+0.1, pointsList![i].points!.dy+0.1));
+      canvas.drawPoints(PointMode.points, offsetPoints!, pointsList![i].paint!);
     }
   }
-
+  }
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-}
+  bool shouldRepaint(covariant CustomPainter oldDelegate)  => true;
 
+}
 class DrawingPoints {
-  Paint? paint;
   Offset? points;
-
-  DrawingPoints({this.paint, this.points});
-}
-
-enum SelectedMode { StrokeWidth, Opacity, Color }
+  Paint? paint;
+  DrawingPoints({this.points,this.paint});
+ }
+enum SelectedMode{StrokeWidth,Opacity, Color}
